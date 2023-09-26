@@ -1,0 +1,37 @@
+[gcode_macro M600]
+description: Pauses the current print for color change.
+	Usage: M600 [B<beep_count>] [E<initial_retract>] [U<later_retract>] [X<abs_pos>] [Y<abs_pos>] [Z<rel_pos>]
+gcode:
+	# Replace params with default parameters if missing
+	{% set B = (params.B|default(0)|int,0)|max %}
+	{% set E = (params.E|default(1)|float,0.0)|max %}
+	{% set U = (params.U|default(45)|float,0.0)|max %}
+	{% set X = (params.X|default(10)|float,0.0)|max %}
+	{% set Y = (params.Y|default(10)|float,0.0)|max %}
+	{% set Z = (params.Z|default(10)|float,0.0)|max %}
+
+	# Save state and pause the print
+	SAVE_GCODE_STATE NAME=M600_state
+	PAUSE
+
+	# Relative positioning: Retract <E>mm with 45mm/s (2700mm/min) and go <Z>mm up
+	G91
+	G1 E-{E} F2700
+	G1 Z{Z}
+
+	# Absolute positioning: Move to <X>/<Y> (filament change point) with 50mm/s (3000mm/min)
+	G90
+	G1 X{X} Y{Y} F3000
+
+	# Relative positioning: Retract further <U>mm with 15mm/s (900mm/min)
+	G91
+	G1 E-{U} F900
+
+	# Load the gcode state from before pause
+	RESTORE_GCODE_STATE NAME=M600_state
+	
+	# Beep <beep_count> times and wait for resume
+	{% for n in range(B) %}
+	G4 P1000
+	M300 P1000 S1000
+	{% endfor %}
