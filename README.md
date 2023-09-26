@@ -1,6 +1,6 @@
 # Klipper Macros
 
-A collection of Klipper macros (mainly for the ELEGOO Neptune 4 series)
+A collection of Klipper macros (mainly for the ELEGOO Neptune 4 series printers)
 
 ## Usage
 
