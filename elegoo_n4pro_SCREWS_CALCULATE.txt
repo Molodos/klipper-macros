@@ -1,0 +1,24 @@
+[screws_tilt_adjust]
+# Screws tilt adjust config for Elegoo Neptune 4 (Pro)
+# Coordinates are absolute coordinates where the probe is above the screws
+screw1: 142.0, 102.0
+screw1_name: bed center
+screw2: 58.0, 187.0
+screw2_name: left rear screw
+screw3: 58.0, 17.0
+screw3_name: left front screw
+screw4: 226.0, 187.0
+screw4_name: right rear screw
+screw5: 226.0, 17.0
+screw5_name: right front screw
+horizontal_move_z: 10
+speed: 120
+screw_thread: CW-M4
+
+[gcode_macro SCREWS_CALCULATE]
+# Screws calculate macro for Elegoo Neptune 4 (Pro)
+description: Calculates screw adjustments needed for manual leveling.
+	Usage: SCREWS_CALCULATE
+gcode:
+    G28
+    SCREWS_TILT_CALCULATE
