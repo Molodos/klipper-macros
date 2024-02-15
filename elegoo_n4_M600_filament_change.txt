@@ -1,4 +1,5 @@
 [gcode_macro M600]
+# Pause print macro for ELEGOO Neptune 4 (Pro)
 description: Pauses the current print for color change.
 	Usage: M600 [B<beep_count>] [E<initial_retract>] [U<later_retract>] [X<abs_pos>] [Y<abs_pos>] [Z<rel_pos>]
 gcode:

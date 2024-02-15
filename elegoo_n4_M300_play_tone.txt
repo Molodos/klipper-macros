@@ -6,6 +6,7 @@ value: 0
 shutdown_value: 0
 
 [gcode_macro M300]
+# Beep macro for ELEGOO Neptune 4 (Pro)
 description: Emits an audible beep.
 	Usage: M300 [P<duration>] [S<frequency>]
 gcode:

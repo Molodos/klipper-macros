@@ -1,0 +1,30 @@
+[screws_tilt_adjust]
+# Screws tilt adjust config for Artillery Sidewinder X4 Plus
+# Coordinates are absolute coordinates where the probe is above the screws
+screw1: 166.5, 73
+screw1_name: middle rear support
+screw2: 166.5, 213
+screw2_name: middle front support
+screw3: 42, 274
+screw3_name: left rear screw
+screw4: 42, 144
+screw4_name: left center screw
+screw5: 42, 14
+screw5_name: left front screw
+screw6: 291, 274
+screw6_name: right rear screw
+screw7: 291, 144
+screw7_name: right center screw
+screw8: 291, 14
+screw8_name: right front screw
+horizontal_move_z: 10
+speed: 120
+screw_thread: CW-M4
+
+[gcode_macro SCREWS_CALCULATE]
+# Screws calculate macro for Artillery Sidewinder X4 Plus
+description: Calculates screw adjustments needed for manual leveling.
+	Usage: SCREWS_CALCULATE
+gcode:
+    G28
+    SCREWS_TILT_CALCULATE
