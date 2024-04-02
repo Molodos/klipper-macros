@@ -33,6 +33,6 @@ gcode:
 	
 	# Beep <beep_count> times and wait for resume
 	{% for n in range(B) %}
-	G4 P1000
-	M300 P1000 S1000
+		G4 P1000
+		M300 P1000 S1000
 	{% endfor %}
