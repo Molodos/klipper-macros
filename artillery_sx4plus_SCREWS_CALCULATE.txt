@@ -26,5 +26,5 @@ screw_thread: CW-M4
 description: Calculates screw adjustments needed for manual leveling.
 	Usage: SCREWS_CALCULATE
 gcode:
-    G28
-    SCREWS_TILT_CALCULATE
+	G28
+	SCREWS_TILT_CALCULATE

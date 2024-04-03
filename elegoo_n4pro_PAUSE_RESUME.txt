@@ -1,0 +1,74 @@
+[gcode_macro PAUSE]
+rename_existing: OLD_PAUSE
+description: Pauses the current print
+  Usage: PAUSE
+gcode:
+  # Wait for planned gcode moves to complete
+  M400
+
+  # Define parking position
+  {% set x_park = printer.toolhead.axis_minimum.x+5 %}
+  {% set y_park = printer.toolhead.axis_minimum.y+5 %}
+  {% set z_park = printer.gcode_move.position.z %}
+
+  # Store curent temperatures in variables inside resume macro
+  SET_GCODE_VARIABLE MACRO=RESUME VARIABLE=etemp VALUE={printer['extruder'].target}   
+  SET_GCODE_VARIABLE MACRO=RESUME VARIABLE=bed_temp VALUE={printer['heater_bed'].target}
+  SET_GCODE_VARIABLE MACRO=RESUME VARIABLE=bed1_temp VALUE={printer['heater_generic heater_bed1'].target}
+
+  # Store current position
+  SAVE_GCODE_STATE NAME=print_position
+
+  # Move 5mm up and 3mm right while retracting 2mm if there is enough free space above
+  G91
+  {% if z_park+5 < printer.toolhead.axis_maximum.z %}
+    G1 E-2 X3 Z1 F2100
+    G1 Z4 F600
+    {% set z_park = z_park+5 %}
+  {% endif %}
+
+  # Store current position being 5mm above print
+  SAVE_GCODE_STATE NAME=print_position_up
+
+  # Move 25mm higher if there is enough free space above
+  {% if z_park+25 < printer.toolhead.axis_maximum.z %}
+    G1 Z25 F600
+    {% set z_park = z_park+25 %}
+  {% endif %}
+
+  # Move horizontally to parking position while retracting further
+  G90
+  G1 X{x_park} Y{y_park} E-20 F6000
+
+  # Pause
+  M25
+
+
+[gcode_macro RESUME]
+rename_existing: OLD_RESUME
+description: Resumes the current print
+  Usage: RESUME
+variable_etemp: 0
+variable_bed_temp: 0
+variable_bed1_temp: 0
+gcode:
+  # Resume print
+  M24
+
+  # Restore stored temperatures
+  SET_HEATER_TEMPERATURE HEATER=extruder TARGET={etemp}
+  SET_HEATER_TEMPERATURE HEATER=heater_bed TARGET={bed_temp}
+  SET_HEATER_TEMPERATURE HEATER=heater_bed1 TARGET={bed1_temp}
+  TEMPERATURE_WAIT SENSOR=extruder MINIMUM={etemp-4} MAXIMUM={etemp+10}
+
+  # Extrude 30mm to compensate retraction on pause
+  G91
+  M17 E
+  G1 E30 F200
+  G90
+
+  # Go back 5mm above print
+  RESTORE_GCODE_STATE NAME=print_position_up MOVE=1 MOVE_SPEED=250
+
+  # Go back to printing position
+  RESTORE_GCODE_STATE NAME=print_position MOVE=1 MOVE_SPEED=250
