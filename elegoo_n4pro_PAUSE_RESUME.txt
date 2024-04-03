@@ -19,11 +19,11 @@ gcode:
   # Store current position
   SAVE_GCODE_STATE NAME=print_position
 
-  # Move 5mm up and 3mm right while retracting 5mm if there is enough free space above
+  # Retract 5mm and move 5mm up and 3mm right if there is enough free space above
   G91
+  G1 E-5 F2100
   {% if z_park+5 < printer.toolhead.axis_maximum.z %}
-    G1 E-5 X3 Z1 F2100
-    G1 Z4 F600
+    G1 Z5 X3 F600
     {% set z_park = z_park+5 %}
   {% endif %}
 
