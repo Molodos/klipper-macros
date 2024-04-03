@@ -19,10 +19,10 @@ gcode:
   # Store current position
   SAVE_GCODE_STATE NAME=print_position
 
-  # Move 5mm up and 3mm right while retracting 2mm if there is enough free space above
+  # Move 5mm up and 3mm right while retracting 5mm if there is enough free space above
   G91
   {% if z_park+5 < printer.toolhead.axis_maximum.z %}
-    G1 E-2 X3 Z1 F2100
+    G1 E-5 X3 Z1 F2100
     G1 Z4 F600
     {% set z_park = z_park+5 %}
   {% endif %}
@@ -38,7 +38,7 @@ gcode:
 
   # Move horizontally to parking position while retracting further
   G90
-  G1 X{x_park} Y{y_park} E-20 F6000
+  G1 X{x_park} Y{y_park} E-15 F6000
 
   # Pause
   M25
@@ -61,10 +61,10 @@ gcode:
   SET_HEATER_TEMPERATURE HEATER=heater_bed1 TARGET={bed1_temp}
   TEMPERATURE_WAIT SENSOR=extruder MINIMUM={etemp-4} MAXIMUM={etemp+10}
 
-  # Extrude 30mm to compensate retraction on pause
+  # Extrude 20m to compensate retraction on pause
   G91
   M17 E
-  G1 E30 F200
+  G1 E20 F200
   G90
 
   # Go back 5mm above print
